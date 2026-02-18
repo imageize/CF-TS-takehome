@@ -1,6 +1,6 @@
 # Data Map - cf-typesctipt-takehome
 
-An interactive browser-based application that visualizes a data map from a static list of system definitions. Built for the Ethyca Open Source Engineer (TypeScript) take-home assignment.
+An interactive browser-based application that visualizes a data map from a static list of system definitions.
 
 ## How to Run
 
