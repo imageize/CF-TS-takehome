@@ -23,5 +23,8 @@ The full plan is split into separate docs so we can track progress and add new i
 - **[conventions.md](conventions.md)** - Naming conventions and code standards.
 - **[components/system-card.md](components/system-card.md)** – SystemCard component
 - **[components/filters.md](components/filters.md)** – Filter controls and layout toggle
+- **[enhancements/dependencies.md](enhancements/dependencies.md)** – Dependency visualization
+- **[enhancements/animations.md](enhancements/animations.md)** – Animations and polish
+- **[tests.md](tests.md)** – Conventions on testing
 
 Use these files to see what's done and what to do next.

@@ -25,7 +25,15 @@ const SYSTEM_TYPE_COLORS: Record<string, string> = {
   Integration: 'border-sky-500/60 bg-sky-500/10',
 }
 
+const SYSTEM_TYPE_HOVER: Record<string, string> = {
+  Application: 'hover:scale-[1.02] hover:shadow-lg hover:shadow-teal-500/30 hover:border-teal-500/80',
+  Service: 'hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/30 hover:border-amber-500/80',
+  Database: 'hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/30 hover:border-purple-500/80',
+  Integration: 'hover:scale-[1.02] hover:shadow-lg hover:shadow-sky-500/30 hover:border-sky-500/80',
+}
+
 const DEFAULT_COLOR = 'border-slate-600 bg-slate-800/50'
+const DEFAULT_HOVER = 'hover:scale-[1.2] hover:shadow-lg hover:shadow-slate-500/30 hover:border-slate-500/80'
 
 
 export default function SystemCard({ system }: SystemCardProps) {
@@ -35,9 +43,12 @@ export default function SystemCard({ system }: SystemCardProps) {
 
   // TODO - Tailwind Pruning: Use ClassNames package to prevent pruning issue with Tailwind.
   const colorClass = SYSTEM_TYPE_COLORS[system.system_type] ?? DEFAULT_COLOR
+  const hoverClass = SYSTEM_TYPE_HOVER[system.system_type] ?? DEFAULT_HOVER
 
   return (
-    <article className={`rounded-lg border p-4 ${colorClass}`}>
+    <article
+      className={`rounded-lg border p-4 transition-all duration-300 ease-out ${colorClass} ${hoverClass}`}
+    >
       <h3 className="font-semibold text-white text-base">
         {system.name}
       </h3>

@@ -1,7 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import SystemCard from '../components/SystemCard'
 import DataMapFilters from '../components/DataMapFilters'
+import CategoryConnectors, {
+  getRelatedCardIds,
+} from '../components/CategoryConnectors'
 import {
   parseAndDedupeSampleData,
   applyFilters,
@@ -38,6 +41,17 @@ const DataMapPage = () => {
     [systems]
   )
 
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [hoveredCardId, setHoveredCardId] = useState<string | null>(null)
+
+  const relatedCardIds = useMemo(
+    () =>
+      hoveredCardId
+        ? getRelatedCardIds(filteredSystems, hoveredCardId)
+        : new Set<string>(),
+    [filteredSystems, hoveredCardId]
+  )
+
   const groupOrder = useMemo(() => {
     const keys = Array.from(groupedSystems.keys())
     if (layoutMode === 'system_type') {
@@ -70,7 +84,17 @@ const DataMapPage = () => {
           onLayoutModeChange={setLayoutMode}
         />
 
-        <div className="flex flex-row mt-8 gap-10">
+        <div
+          ref={contentRef}
+          className="relative flex flex-row mt-8 gap-10"
+        >
+          {layoutMode === 'system_type' && (
+            <CategoryConnectors
+              systems={filteredSystems}
+              hoveredCardId={hoveredCardId}
+              containerRef={contentRef}
+            />
+          )}
           {groupOrder.map((groupKey) => {
             const groupSystemsList = groupedSystems.get(groupKey) ?? []
             if (groupSystemsList.length === 0) return null
@@ -82,12 +106,27 @@ const DataMapPage = () => {
                   {groupKey}
                 </h2>
                 <div className="grid grid-cols-1 gap-4 space-y-10">
-                  {groupSystemsList.map((system) => (
-                    <SystemCard
-                      key={`${groupKey}-${system.fides_key}`}
-                      system={system}
-                    />
-                  ))}
+                  {groupSystemsList.map((system) => {
+                    const isDimmed =
+                      layoutMode === 'system_type' &&
+                      hoveredCardId !== null &&
+                      !relatedCardIds.has(system.fides_key)
+                    return (
+                      <div
+                        key={`${groupKey}-${system.fides_key}`}
+                        data-fides-key={system.fides_key}
+                        onMouseEnter={() =>
+                          setHoveredCardId(system.fides_key)
+                        }
+                        onMouseLeave={() => setHoveredCardId(null)}
+                        className={`transition-opacity duration-300 ease-out z-10 ${
+                          isDimmed ? 'opacity-20' : 'opacity-100'
+                        }`}
+                      >
+                        <SystemCard system={system} />
+                      </div>
+                    )
+                  })}
                 </div>
               </section>
             )
